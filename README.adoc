@@ -1,9 +1,8 @@
 # TP MIAGE conception logicielle
 
 ## Nom du(des) étudiant(e)(s) de ce monôme/binôme 
-WARNING: NE PAS OUBLIER DE MENTIONNER LES DEUX NOMS SI VOUS ETES EN BINOME!
+BOURMAUD Thomas et DROUET Basile
 
-#XXX# (et #YYY#)
 
 Commentaires éventuels des étudiants : #XXXXXX#
 
@@ -50,20 +49,25 @@ TIP: [Rappel Git] Trois dépôts sont ici utilisés : le dépot Github de l'ense
 * Observer le code du projet `todolist-debut-ex1`
 
 *Le code est-il structuré en couches ? Quel problèmes ce code peut-il poser ?*
+Le code présenté ne suit pas une structure en couches clairement définie. Ce modèle ressemble plus à un modèle MVC. Ce code peut poser des problèmes de maintenabilité et d’évolutivité à long terme car il ne suit pas une structure en couches clairement définie. Cela peut rendre difficile la mise à l’échelle de l’application et la gestion de la complexité lorsqu’elle est étendue. Il serait donc préférable d’organiser le code en couches logiques clairement définies, telles que la couche de présentation, la couche de service et la couche de persistence, pour faciliter la gestion de l’application et assurer sa robustesse et sa maintenabilité à long terme.
 
 *Où se trouve le code métier (voir la règle de gestion RG 1) ?*
+Le code métier est dans la classe ToDoListController.
 
 *Cette règle est-elle facilement testable par un test unitaire ?*
+Oui, la règle RG1 est facilement testable par un test unitaire. Il suffit de créer un objet TodoItem avec une date qui remonte à plus de 24 heures, puis de vérifier que la méthode finalContent du contrôleur ajoute la chaîne de caractères "[LATE!]" au début du contenu de l’objet TodoItem. On peut également tester le cas où la date est inférieure à 24 heures, pour vérifier que la méthode ne modifie pas le contenu dans ce cas.
 
 * Lancer une base PostgreSQL en Docker dans un terminal (on lance ici la base en mode interactif pour visualiser son activité. Pour la lancer en tâche de fond, remplacer les options `it` par `d` comme 'daemon'):
 ```bash
 docker run -it -e POSTGRES_PASSWORD=password -p 5432:5432 postgres
 ```
 *Expliquer cette ligne de commande (y compris les options utilisées)*
+Le "docker run" est la commande de base de Docker, "-it" indique à Docker de créer un terminal interactif, "-e POSTGRES_PASSWORD=password" indique à Docker le mdot de passe de la variable d’environnement dans POSTGRES, "-p 5432:5432" est l’association de Docker à POSTGRES, "postgres" est le nom de l’image Docker à executer.
 
 * Compléter le code manquant dans la méthode `TodoListController.createTodoItem()`
 
 *Pourquoi `todoItemRepository` est-il `null` ? Quelle est la meilleure façon de l'injecter ?*
+todoItemRepository est nul car il n'y a pas de lien explicite entre lui et l’injection de dépendance pour le relier à l’instance de TodoListController avec le bon objet.
 
 * Modifier le code en conséquence.
 
@@ -89,6 +93,8 @@ NOTE: Pour lancer l'application Spring, sélectionner la classe `TodolistApplica
 * Quand le nouveau endpoint fonctionne, commiter, faire un push vers Github.
 
 * Vérifier avec DBeaver que les données sont bien en base PostgreSQL.
+Oui, nous retrouvons nos données dans la base de données grâce à DBeaver.
+
 
 ### Exercice 2 - Refactoring en architecture hexagonale
 _Temps estimé : 1 h 20_
@@ -105,6 +111,13 @@ Source : http://leanpub.com/get-your-hands-dirty-on-clean-architecture[Tom Hombe
   - la couche `domain` qui contient les entités (au sens DDD, pas au sens JPA). En général des classes complexes (méthodes riches, relations entre les entités)
 
 *Rappeler en quelques lignes les grands principes de l'architecture hexagonale.*
+L’architecture hexagonale, également connue sous le nom de ports et adaptateurs, est un modèle architectural qui met l’accent sur la séparation des préoccupations et la flexibilité. L’architecture hexagonale est basée sur l’idée que les composants du système peuvent être divisés en trois parties principales :
+
+Le noyau ou le domaine : contient les règles métier et les fonctionnalités clés de l’application.
+
+Les adaptateurs : fournissent des interfaces pour interagir avec le noyau, tels que des API REST, des interfaces de base de données, des interfaces utilisateur, etc.
+
+Les ports : sont des interfaces qui permettent de connecter différents adaptateurs entre eux.
 
 Compléter ce code avec une fonctionnalité de création de `TodoItem`  persisté en base et appelé depuis un endpoint REST `POST /todos` qui :
 
@@ -121,6 +134,7 @@ _Temps estimé : 20 mins_
 * Implémenter (en junit) des TU portant sur la règle de gestion qui consiste à afficher `[LATE!]` dans la description d'un item en retard de plus de 24h.
 
 *Quels types de tests devra-t-on écrire pour les adaptateurs ?* 
+Pour les adaptateurs, il faudra écrire des tests d’intégration pour vérifier que l’adaptateur interagit correctement avec le noyau et les ports de l’application.
 
 *S'il vous reste du temps, écrire quelques-uns de ces types de test.*
 
